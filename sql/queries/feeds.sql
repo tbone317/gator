@@ -8,3 +8,7 @@ SELECT feeds.name, url, users.name as username
 	FROM feeds as feeds
 	inner join users as users
 		on feeds.user_id = users.id;
+
+-- name: GetFeedByURL :one
+SELECT * FROM feeds 
+WHERE url = $1;
