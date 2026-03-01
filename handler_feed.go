@@ -9,6 +9,23 @@ import (
 	"github.com/tbone317/gator/internal/database"
 )
 
+func handlerListFeeds(s *state, cmd command) error {
+	feeds, err := s.db.ListFeeds(context.Background())
+	if err != nil {
+		return fmt.Errorf("couldn't get feeds: %w", err)
+	}
+
+	fmt.Printf("Found %d feeds:\n", len(feeds))
+	for _, feed := range feeds {
+		fmt.Printf("* Name: %s\n", feed.Name)
+		fmt.Printf("  URL: %s\n", feed.Url)
+		fmt.Printf("  User: %s\n", feed.Username)
+		fmt.Println()
+	}
+
+	return nil
+}
+
 func handlerAddFeed(s *state, cmd command) error {
 	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
 	if err != nil {
@@ -43,10 +60,10 @@ func handlerAddFeed(s *state, cmd command) error {
 }
 
 func printFeed(feed database.Feed) {
-	fmt.Printf("* ID:            %s\n", feed.ID)
-	fmt.Printf("* Created:       %v\n", feed.CreatedAt)
-	fmt.Printf("* Updated:       %v\n", feed.UpdatedAt)
-	fmt.Printf("* Name:          %s\n", feed.Name)
-	fmt.Printf("* URL:           %s\n", feed.Url)
-	fmt.Printf("* UserID:        %s\n", feed.UserID)
+	fmt.Printf("ID: %s\n", feed.ID)
+	fmt.Printf("Name: %s\n", feed.Name)
+	fmt.Printf("URL: %s\n", feed.Url)
+	fmt.Printf("User ID: %s\n", feed.UserID)
+	fmt.Printf("Created At: %s\n", feed.CreatedAt.Format(time.RFC3339))
+	fmt.Printf("Updated At: %s\n", feed.UpdatedAt.Format(time.RFC3339))
 }
